@@ -37,9 +37,8 @@ class App {
     _loadModel() {
         const loader = new GLTFLoader();
         let mixer;
-        let arm2; let arm3; let arm4; // callback function for add children
-        let hand01; let hand11L; let hand11R;
-        let hand12L; let hand12R; let hand21L; let hand21R;
+        let arm1, arm2, arm3, arm4, hand01, hand11L, hand11R, hand12L, hand12R, hand21L, hand21R;
+        // const standPos = { x: 0, y: 0, z: 0 }; //skip
         
         const arm1Pos = { x: 0, y: 2.93389, z: 0 };
         const arm2Pos = { x: 0, y: 1.437, z: 0 };
@@ -53,8 +52,8 @@ class App {
         const hand21LPos = { x: -0.262186, y: 1.151901, z: 0 };
         const hand21RPos = { x: 0.262186, y: 1.151901, z: 0 };
 
-        const sound0 = new Audio('./sound/ding.mp3');
-        sound0.volume = 0.5;
+        const sound0 = new Audio('./sound/dingA.mp3');
+        sound0.volume = 0.8;
         const sound1 = new Audio('./sound/drill2.mp3');
         const sound2 = new Audio('./sound/drill3.mp3');
         const sound3 = new Audio('./sound/drill3.mp3');
@@ -68,7 +67,7 @@ class App {
                 sound0.play();
                 setTimeout(() => {
                     window.location.reload();
-                }, 1000);
+                }, 950);
             }
         }, 'refresh')
         .name('Refresh')
