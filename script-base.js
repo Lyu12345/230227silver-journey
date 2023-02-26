@@ -37,8 +37,9 @@ class App {
     _loadModel() {
         const loader = new GLTFLoader();
         let mixer;
-        let arm1, arm2, arm3, arm4, hand01, hand11L, hand11R, hand12L, hand12R, hand21L, hand21R;
-        // const standPos = { x: 0, y: 0, z: 0 }; //skip
+        let arm2; let arm3; let arm4; // callback function for add children
+        let hand01; let hand11L; let hand11R;
+        let hand12L; let hand12R; let hand21L; let hand21R;
         
         const arm1Pos = { x: 0, y: 2.93389, z: 0 };
         const arm2Pos = { x: 0, y: 1.437, z: 0 };
