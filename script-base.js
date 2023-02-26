@@ -39,7 +39,7 @@ class App {
         let mixer;
         let arm1, arm2, arm3, arm4, hand01, hand11L, hand11R, hand12L, hand12R, hand21L, hand21R;
         // const standPos = { x: 0, y: 0, z: 0 }; //skip
-        
+
         const arm1Pos = { x: 0, y: 2.93389, z: 0 };
         const arm2Pos = { x: 0, y: 1.437, z: 0 };
         const arm3Pos = { x: 0, y: 3.26085, z: 0 };
@@ -70,8 +70,8 @@ class App {
                 }, 950);
             }
         }, 'refresh')
-        .name('Refresh')
-        .domElement.style.marginLeft = '20px';
+            .name('Refresh')
+            .domElement.style.marginLeft = '20px';
 
         loader.load('./assets/arm1.gltf', (gltf) => {
             arm1 = new THREE.Object3D();
@@ -89,7 +89,10 @@ class App {
         loader.load('./assets/arm2.gltf', (gltf) => {
             arm2 = gltf.scene;
             arm2.position.set(arm2Pos.x, arm2Pos.y, arm2Pos.z);
-            arm1.add(arm2);
+            // arm1.add(arm2);
+            setTimeout(() => {
+                arm1.add(arm2);
+            }, 250);
 
             this._gui.add(arm2.rotation, 'x', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
                 .name('arm2 X')
@@ -126,7 +129,7 @@ class App {
 
             setTimeout(() => {
                 arm4.add(hand01);
-            }, 1000);
+            }, 500);
 
             this._gui.add(hand01.rotation, 'y', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
                 .name('hand Z')
@@ -134,6 +137,7 @@ class App {
                     sound5.play();
                 });
         });
+
 
         loader.load('./assets/hand11L.gltf', (gltf) => {
             hand11L = gltf.scene;
