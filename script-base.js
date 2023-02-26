@@ -129,7 +129,7 @@ class App {
 
             setTimeout(() => {
                 arm4.add(hand01);
-            }, 500);
+            }, 900);
 
             this._gui.add(hand01.rotation, 'y', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
                 .name('hand Z')
