@@ -129,14 +129,15 @@ class App {
 
             setTimeout(() => {
                 arm4.add(hand01);
-            }, 900);
 
-            this._gui.add(hand01.rotation, 'y', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
-                .name('hand Z')
-                .onChange(() => {
-                    sound5.play();
-                });
+                this._gui.add(hand01.rotation, 'y', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
+                    .name('hand Z')
+                    .onChange(() => {
+                        sound5.play();
+                    });
+            }, 900);
         });
+
 
 
         loader.load('./assets/hand11L.gltf', (gltf) => {
@@ -290,4 +291,3 @@ class App {
 window.addEventListener('load', () => {
     new App();
 });
-
