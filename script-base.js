@@ -14,15 +14,24 @@ class App {
 
         renderer.shadowMap.enabled = true;
         renderer.setClearColor(0xb7ecff); // 배경색.
-
         this._renderer = renderer;
-
         const scene = new THREE.Scene();
-
         this._scene = scene;
         this._clock = new THREE.Clock();
-        this._gui = new GUI(); // add dat.gui to the constructor
+        this.arm1Rot = { x: 0, y: 0, z: 0 };
+        this.arm2Rot = { x: 0, y: 0, z: 0 };
+        this.arm3Rot = { x: 0, y: 0, z: 0 };
+        this.arm4Rot = { x: 0, y: 0, z: 0 };
+        this.hand01Rot = { x: 0, y: 0, z: 0 };
+        this.hand11LRot = { x: 0, y: 0, z: 0 };
+        this.hand11RRot = { x: 0, y: 0, z: 0 };
+        this.hand12LRot = { x: 0, y: 0, z: 0 };
+        this.hand12RRot = { x: 0, y: 0, z: 0 };
+        this.hand21LRot = { x: 0, y: 0, z: 0 };
+        this.hand21RRot = { x: 0, y: 0, z: 0 };
+
         this._loadModel();
+        this._createGuiControls();
         this._setupModel();
         this._setupCamera(); //camera가 orbitctrl보다 위에 있어야함.
         this._setupControls();
@@ -32,13 +41,13 @@ class App {
         this.resize();
 
         requestAnimationFrame(this.render.bind(this));
+
     }
+
 
     _loadModel() {
         const loader = new GLTFLoader();
-        let mixer;
         let arm1, arm2, arm3, arm4, hand01, hand11L, hand11R, hand12L, hand12R, hand21L, hand21R;
-        // const standPos = { x: 0, y: 0, z: 0 }; //skip
 
         const arm1Pos = { x: 0, y: 2.93389, z: 0 };
         const arm2Pos = { x: 0, y: 1.437, z: 0 };
@@ -52,6 +61,114 @@ class App {
         const hand21LPos = { x: -0.262186, y: 1.151901, z: 0 };
         const hand21RPos = { x: 0.262186, y: 1.151901, z: 0 };
 
+
+        loader.load('./assets/arm1.gltf', (gltf) => {
+            arm1 = new THREE.Object3D();
+            arm1.position.set(arm1Pos.x, arm1Pos.y, arm1Pos.z);
+            arm1.add(gltf.scene);
+            this._scene.add(arm1);
+            this.arm1 = arm1; 
+        });
+
+
+        loader.load('./assets/arm2.gltf', (gltf) => {
+            arm2 = gltf.scene;
+            arm2.position.set(arm2Pos.x, arm2Pos.y, arm2Pos.z);
+            setTimeout(() => {
+                arm1.add(arm2);
+            }, 200);
+            // this._scene.add(arm2);
+            this.arm2 = arm2;
+        });
+
+        loader.load('./assets/arm3.gltf', (gltf) => {
+            arm3 = gltf.scene;
+            arm3.position.set(arm3Pos.x, arm3Pos.y, arm3Pos.z);
+            arm2.add(arm3);
+            // this._scene.add(arm3);
+            this.arm3 = arm3;
+        });
+
+        loader.load('./assets/arm4.gltf', (gltf) => {
+            arm4 = gltf.scene;
+            arm4.position.set(arm4Pos.x, arm4Pos.y, arm4Pos.z);
+            arm3.add(arm4);
+            // this._scene.add(arm4);
+            this.arm4 = arm4;
+        });
+
+        loader.load('./assets/hand01.gltf', (gltf) => {
+            hand01 = gltf.scene;
+            hand01.position.set(hand01Pos.x, hand01Pos.y, hand01Pos.z);
+            setTimeout(() => {
+                arm4.add(hand01);
+            }, 400);
+
+            this.hand01 = hand01;
+        });
+
+        loader.load('./assets/hand11L.gltf', (gltf) => {
+            hand11L = gltf.scene;
+            hand11L.position.set(hand11LPos.x, hand11LPos.y, hand11LPos.z);
+            hand01.add(hand11L);
+
+            this.hand11L = hand11L;
+        });
+
+        loader.load('./assets/hand11R.gltf', (gltf) => {
+            hand11R = gltf.scene;
+            hand11R.position.set(hand11RPos.x, hand11RPos.y, hand11RPos.z);
+            hand01.add(hand11R);
+
+            
+            this.hand11R = hand11R;
+        });
+
+        loader.load('./assets/hand12L.gltf', (gltf) => {
+            hand12L = gltf.scene;
+            hand12L.position.set(hand12LPos.x, hand12LPos.y, hand12LPos.z);
+            hand01.add(hand12L);
+
+            this.hand12L = hand12L;
+        });
+
+        loader.load('./assets/hand12R.gltf', (gltf) => {
+            hand12R = gltf.scene;
+            hand12R.position.set(hand12RPos.x, hand12RPos.y, hand12RPos.z);
+            hand01.add(hand12R);
+
+            this.hand12R = hand12R;
+        });
+
+        loader.load('./assets/hand21L.gltf', (gltf) => {
+            hand21L = gltf.scene;
+            hand21L.position.set(hand21LPos.x, hand21LPos.y, hand21LPos.z);
+            hand11L.add(hand21L);
+
+            this.hand21L = hand21L;
+        });
+
+        loader.load('./assets/hand21R.gltf', (gltf) => {
+            hand21R = gltf.scene;
+            hand21R.position.set(hand21RPos.x, hand21RPos.y, hand21RPos.z);
+            hand11R.add(hand21R);
+
+            this.hand21R = hand21R;
+        });
+
+        ///////stand. not act.
+        loader.load('./assets/stand.gltf', (gltf) => {
+            const stand = gltf.scene;
+            stand.position.set(0, 0, 0);
+            this._scene.add(stand);
+        });
+    }
+
+    _createGuiControls() {
+        const gui = new GUI();
+
+        const self = this;
+        const arm1 = this._scene.getObjectByName('Arm1');
         const sound0 = new Audio('./sound/dingA.mp3');
         sound0.volume = 0.8;
         const sound1 = new Audio('./sound/drill2.mp3');
@@ -61,8 +178,7 @@ class App {
         const sound5 = new Audio('./sound/drill2.mp3');
         const sound6 = new Audio('./sound/drill1.mp3');
 
-        // add Refresh controller
-        this._gui.add({
+        gui.add({
             refresh: () => {
                 sound0.play();
                 setTimeout(() => {
@@ -73,126 +189,55 @@ class App {
             .name('Refresh')
             .domElement.style.marginLeft = '20px';
 
-        loader.load('./assets/arm1.gltf', (gltf) => {
-            arm1 = new THREE.Object3D();
-            arm1.position.set(arm1Pos.x, arm1Pos.y, arm1Pos.z);
-            arm1.add(gltf.scene);
-            this._scene.add(arm1);
 
-            this._gui.add(arm1.rotation, 'y', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
-                .name('arm1 Z')
-                .onChange(() => {
-                    sound1.play();
-                });
+        gui.add(this.arm1Rot, 'y', -Math.PI / 2, Math.PI / 2, 0.1).name('arm1 Y').onChange(() => {
+            sound1.play();
+            if (this.arm1) {
+                this.arm1.rotation.y = this.arm1Rot.y;
+            }
         });
 
-        loader.load('./assets/arm2.gltf', (gltf) => {
-            arm2 = gltf.scene;
-            arm2.position.set(arm2Pos.x, arm2Pos.y, arm2Pos.z);
-            // arm1.add(arm2);
-            setTimeout(() => {
-                arm1.add(arm2);
-            }, 250);
-
-            this._gui.add(arm2.rotation, 'x', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
-                .name('arm2 X')
-                .onChange(() => {
-                    sound2.play();
-                });
-        });
-
-        loader.load('./assets/arm3.gltf', (gltf) => {
-            arm3 = gltf.scene;
-            arm3.position.set(arm3Pos.x, arm3Pos.y, arm3Pos.z);
-            arm2.add(arm3);
-            this._gui.add(arm3.rotation, 'x', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
-                .name('arm3 X')
-                .onChange(() => {
-                    sound3.play();
-                });
-        });
-
-        loader.load('./assets/arm4.gltf', (gltf) => {
-            arm4 = gltf.scene;
-            arm4.position.set(arm4Pos.x, arm4Pos.y, arm4Pos.z);
-            arm3.add(arm4);
-            this._gui.add(arm4.rotation, 'x', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
-                .name('arm4 X')
-                .onChange(() => {
-                    sound4.play();
-                });
-        });
-
-        loader.load('./assets/hand01.gltf', (gltf) => {
-            hand01 = gltf.scene;
-            hand01.position.set(hand01Pos.x, hand01Pos.y, hand01Pos.z);
-
-            setTimeout(() => {
-                arm4.add(hand01);
-
-                this._gui.add(hand01.rotation, 'y', -0.5 * Math.PI, 0.5 * Math.PI, 0.01)
-                    .name('hand Z')
-                    .onChange(() => {
-                        sound5.play();
-                    });
-            }, 900);
+        gui.add(this.arm2Rot, 'x', -Math.PI / 2, Math.PI / 2, 0.1).name('arm2 X').onChange(() => {
+            sound2.play();
+            if (this.arm2) {
+                this.arm2.rotation.x = this.arm2Rot.x;
+            }
         });
 
 
-
-        loader.load('./assets/hand11L.gltf', (gltf) => {
-            hand11L = gltf.scene;
-            hand11L.position.set(hand11LPos.x, hand11LPos.y, hand11LPos.z);
-            hand01.add(hand11L);
-
-            this._gui.add(hand11L.rotation, 'z', 0, 1.3, 0.01)
-                .name('hand y')
-                .onChange(() => {
-                    sound6.play();
-                    hand11R.rotation.z = -hand11L.rotation.z;
-                    hand12L.rotation.z = +hand11L.rotation.z;
-                    hand12R.rotation.z = -hand11L.rotation.z;
-                    hand21L.rotation.z = -hand11L.rotation.z;
-                    hand21R.rotation.z = +hand11L.rotation.z;
-                });
-
+        gui.add(this.arm3Rot, 'x', -Math.PI / 2, Math.PI / 2, 0.1).name('arm3 X').onChange(() => {
+            sound3.play();
+            if (this.arm3) {
+                this.arm3.rotation.x = this.arm3Rot.x;
+            }
         });
 
-        loader.load('./assets/hand11R.gltf', (gltf) => {
-            hand11R = gltf.scene;
-            hand11R.position.set(hand11RPos.x, hand11RPos.y, hand11RPos.z);
-            hand01.add(hand11R);
+
+        gui.add(this.arm4Rot, 'x', -Math.PI / 2, Math.PI / 2, 0.1).name('arm4 X').onChange(() => {
+            sound4.play();
+            if (this.arm4) {
+                this.arm4.rotation.x = this.arm4Rot.x;
+            }
         });
 
-        loader.load('./assets/hand12L.gltf', (gltf) => {
-            hand12L = gltf.scene;
-            hand12L.position.set(hand12LPos.x, hand12LPos.y, hand12LPos.z);
-            hand01.add(hand12L);
+
+        gui.add(this.hand01Rot, 'y', -Math.PI / 2, Math.PI / 2, 0.1).name('hand5 Y').onChange(() => {
+            sound5.play();
+            if (this.hand01) {
+                this.hand01.rotation.y = this.hand01Rot.y;
+            }
         });
 
-        loader.load('./assets/hand12R.gltf', (gltf) => {
-            hand12R = gltf.scene;
-            hand12R.position.set(hand12RPos.x, hand12RPos.y, hand12RPos.z);
-            hand01.add(hand12R);
-        });
-
-        loader.load('./assets/hand21L.gltf', (gltf) => {
-            hand21L = gltf.scene;
-            hand21L.position.set(hand21LPos.x, hand21LPos.y, hand21LPos.z);
-            hand11L.add(hand21L);
-        });
-
-        loader.load('./assets/hand21R.gltf', (gltf) => {
-            hand21R = gltf.scene;
-            hand21R.position.set(hand21RPos.x, hand21RPos.y, hand21RPos.z);
-            hand11R.add(hand21R);
-        });
-
-        ///////stand. not act.
-        loader.load('./assets/stand.gltf', (gltf) => {
-            const stand = gltf.scene;
-            stand.position.set(0, 0, 0);
-            this._scene.add(stand);
+        gui.add(this.hand11LRot, 'z', 0 , 1.3 , 0.1).name('hand Grab').onChange(() => {
+            sound6.play();
+            if (this.hand11L) {
+                this.hand11L.rotation.z = this.hand11LRot.z;
+                this.hand11R.rotation.z = -this.hand11LRot.z;
+                this.hand12L.rotation.z = this.hand11LRot.z;
+                this.hand12R.rotation.z = -this.hand11LRot.z;
+                this.hand21L.rotation.z = -this.hand11LRot.z;
+                this.hand21R.rotation.z = this.hand11LRot.z;
+            }
         });
     }
 
@@ -291,3 +336,5 @@ class App {
 window.addEventListener('load', () => {
     new App();
 });
+
+
