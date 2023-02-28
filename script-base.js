@@ -103,7 +103,7 @@ class App {
             hand01.position.set(hand01Pos.x, hand01Pos.y, hand01Pos.z);
             setTimeout(() => {
                 arm4.add(hand01);
-            }, 200);
+            }, 800);
             this.hand01 = hand01;
         });
 
