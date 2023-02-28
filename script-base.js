@@ -66,7 +66,9 @@ class App {
             arm1 = new THREE.Object3D();
             arm1.position.set(arm1Pos.x, arm1Pos.y, arm1Pos.z);
             arm1.add(gltf.scene);
-            this._scene.add(arm1);
+            setTimeout(() => {
+                this._scene.add(arm1);
+            }, 800);
             this.arm1 = arm1; 
         });
 
@@ -76,7 +78,7 @@ class App {
             arm2.position.set(arm2Pos.x, arm2Pos.y, arm2Pos.z);
             setTimeout(() => {
                 arm1.add(arm2);
-            }, 200);
+            }, 800);
             this.arm2 = arm2;
         });
 
@@ -165,7 +167,9 @@ class App {
         loader.load('./assets/stand.gltf', (gltf) => {
             const stand = gltf.scene;
             stand.position.set(0, 0, 0);
-            this._scene.add(stand);
+            setTimeout(() => {
+                this._scene.add(stand);
+            }, 800);
         });
     }
 
