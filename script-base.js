@@ -408,16 +408,16 @@ class App {
         Pointlight4.position.set(5, 5, -5);
         this._scene.add(Pointlight4);
         
-        const Directlight2Helper = new THREE.DirectionalLightHelper(Directlight2, 1);
-        this._scene.add(Directlight2Helper);
-        const PointLight1Helper = new THREE.PointLightHelper(PointLight1, 1);
-        this._scene.add(PointLight1Helper);
-        const Pointlight2Helper = new THREE.PointLightHelper(Pointlight2, 1);
-        this._scene.add(Pointlight2Helper);
-        const Pointlight3Helper = new THREE.PointLightHelper(Pointlight3, 1);
-        this._scene.add(Pointlight3Helper);
-        const Pointlight4Helper = new THREE.PointLightHelper(Pointlight4, 1);
-        this._scene.add(Pointlight4Helper);
+        // const Directlight2Helper = new THREE.DirectionalLightHelper(Directlight2, 1);
+        // this._scene.add(Directlight2Helper);
+        // const PointLight1Helper = new THREE.PointLightHelper(PointLight1, 1);
+        // this._scene.add(PointLight1Helper);
+        // const Pointlight2Helper = new THREE.PointLightHelper(Pointlight2, 1);
+        // this._scene.add(Pointlight2Helper);
+        // const Pointlight3Helper = new THREE.PointLightHelper(Pointlight3, 1);
+        // this._scene.add(Pointlight3Helper);
+        // const Pointlight4Helper = new THREE.PointLightHelper(Pointlight4, 1);
+        // this._scene.add(Pointlight4Helper);
 
 
 
