@@ -46,7 +46,7 @@ class App {
 
 
     _loadModel() {
-        const loader = new GLTFLoader();
+        const RobotArms = new GLTFLoader();
         let arm1, arm2, arm3, arm4, hand01, hand11L, hand11R, hand12L, hand12R, hand21L, hand21R;
 
         const arm1Pos = { x: 0, y: 2.93389, z: 0 };
@@ -62,18 +62,18 @@ class App {
         const hand21RPos = { x: 0.262186, y: 1.151901, z: 0 };
 
 
-        loader.load('./assets/arm1.gltf', (gltf) => {
+        RobotArms.load('./assets/arm1.gltf', (gltf) => {
             arm1 = new THREE.Object3D();
             arm1.position.set(arm1Pos.x, arm1Pos.y, arm1Pos.z);
             arm1.add(gltf.scene);
             setTimeout(() => {
                 this._scene.add(arm1);
             }, 800);
-            this.arm1 = arm1; 
+            this.arm1 = arm1;
         });
 
 
-        loader.load('./assets/arm2.gltf', (gltf) => {
+        RobotArms.load('./assets/arm2.gltf', (gltf) => {
             arm2 = gltf.scene;
             arm2.position.set(arm2Pos.x, arm2Pos.y, arm2Pos.z);
             setTimeout(() => {
@@ -82,7 +82,7 @@ class App {
             this.arm2 = arm2;
         });
 
-        loader.load('./assets/arm3.gltf', (gltf) => {
+        RobotArms.load('./assets/arm3.gltf', (gltf) => {
             arm3 = gltf.scene;
             arm3.position.set(arm3Pos.x, arm3Pos.y, arm3Pos.z);
             setTimeout(() => {
@@ -91,7 +91,7 @@ class App {
             this.arm3 = arm3;
         });
 
-        loader.load('./assets/arm4.gltf', (gltf) => {
+        RobotArms.load('./assets/arm4.gltf', (gltf) => {
             arm4 = gltf.scene;
             arm4.position.set(arm4Pos.x, arm4Pos.y, arm4Pos.z);
             setTimeout(() => {
@@ -100,7 +100,7 @@ class App {
             this.arm4 = arm4;
         });
 
-        loader.load('./assets/hand01.gltf', (gltf) => {
+        RobotArms.load('./assets/hand01.gltf', (gltf) => {
             hand01 = gltf.scene;
             hand01.position.set(hand01Pos.x, hand01Pos.y, hand01Pos.z);
             setTimeout(() => {
@@ -109,7 +109,7 @@ class App {
             this.hand01 = hand01;
         });
 
-        loader.load('./assets/hand11L.gltf', (gltf) => {
+        RobotArms.load('./assets/hand11L.gltf', (gltf) => {
             hand11L = gltf.scene;
             hand11L.position.set(hand11LPos.x, hand11LPos.y, hand11LPos.z);
             setTimeout(() => {
@@ -118,7 +118,7 @@ class App {
             this.hand11L = hand11L;
         });
 
-        loader.load('./assets/hand11R.gltf', (gltf) => {
+        RobotArms.load('./assets/hand11R.gltf', (gltf) => {
             hand11R = gltf.scene;
             hand11R.position.set(hand11RPos.x, hand11RPos.y, hand11RPos.z);
             setTimeout(() => {
@@ -127,7 +127,7 @@ class App {
             this.hand11R = hand11R;
         });
 
-        loader.load('./assets/hand12L.gltf', (gltf) => {
+        RobotArms.load('./assets/hand12L.gltf', (gltf) => {
             hand12L = gltf.scene;
             hand12L.position.set(hand12LPos.x, hand12LPos.y, hand12LPos.z);
             setTimeout(() => {
@@ -136,7 +136,7 @@ class App {
             this.hand12L = hand12L;
         });
 
-        loader.load('./assets/hand12R.gltf', (gltf) => {
+        RobotArms.load('./assets/hand12R.gltf', (gltf) => {
             hand12R = gltf.scene;
             hand12R.position.set(hand12RPos.x, hand12RPos.y, hand12RPos.z);
             setTimeout(() => {
@@ -145,7 +145,7 @@ class App {
             this.hand12R = hand12R;
         });
 
-        loader.load('./assets/hand21L.gltf', (gltf) => {
+        RobotArms.load('./assets/hand21L.gltf', (gltf) => {
             hand21L = gltf.scene;
             hand21L.position.set(hand21LPos.x, hand21LPos.y, hand21LPos.z);
             setTimeout(() => {
@@ -154,7 +154,7 @@ class App {
             this.hand21L = hand21L;
         });
 
-        loader.load('./assets/hand21R.gltf', (gltf) => {
+        RobotArms.load('./assets/hand21R.gltf', (gltf) => {
             hand21R = gltf.scene;
             hand21R.position.set(hand21RPos.x, hand21RPos.y, hand21RPos.z);
             setTimeout(() => {
@@ -164,7 +164,7 @@ class App {
         });
 
         ///////stand. not act.
-        loader.load('./assets/stand.gltf', (gltf) => {
+        RobotArms.load('./assets/stand.gltf', (gltf) => {
             const stand = gltf.scene;
             stand.position.set(0, 0, 0);
             setTimeout(() => {
@@ -237,7 +237,7 @@ class App {
             }
         });
 
-        gui.add(this.hand11LRot, 'z', 0 , 1.3 , 0.1).name('hand Grab').onChange(() => {
+        gui.add(this.hand11LRot, 'z', 0, 1.3, 0.1).name('hand Grab').onChange(() => {
             sound6.play();
             if (this.hand11L) {
                 this.hand11L.rotation.z = this.hand11LRot.z;
@@ -255,19 +255,37 @@ class App {
     }
 
     _createTable() {
-        const scale = { x: 25, y: 1, z: 25 };
-        const position = { x: 0, y: -scale.y / 2, z: 0 };
+        const flatformscale = { x: 25, y: 1, z: 25 };
+        const position = { x: 0, y: -flatformscale.y / 2, z: 0 };
 
         const tableGeometry = new THREE.BoxGeometry();
+        // const tableGeometry = new THREE.PlaneGeometry();
+        // tableGeometry.rotateX(-Math.PI / 180 * 90)
         const tableTexture = new THREE.TextureLoader().load('checkerboard.png');
+        // const mapbump = new THREE.TextureLoader().load('checkerboardN.png');
+        const mapbump = new THREE.TextureLoader().load('checkerboard_bump.png');
         tableTexture.wrapS = THREE.RepeatWrapping;
         tableTexture.wrapT = THREE.RepeatWrapping;
         tableTexture.repeat.set(5, 5); // change the numbers to adjust the size of the checkered pattern
-        const tableMaterial = new THREE.MeshPhongMaterial({ map: tableTexture });
+        mapbump.wrapS = THREE.RepeatWrapping;
+        mapbump.wrapT = THREE.RepeatWrapping;
+        mapbump.repeat.set(5, 5); // change the numbers to adjust the size of the checkered pattern
+        const tableMaterial = new THREE.MeshStandardMaterial({
+        // const tableMaterial = new THREE.MeshPhysicalMaterial({
+            map: tableTexture,
+            // normalMap: mapbump,
+            bumpMap : mapbump,
+            bumpScale : 0.1,
+
+            roughness: 0.3,
+            // metalness: 0.2,
+            emissive: 0x202020,
+            // emissive: 0x505050,
+        });
         const table = new THREE.Mesh(tableGeometry, tableMaterial);
 
         table.position.set(position.x, position.y, position.z);
-        table.scale.set(scale.x, scale.y, scale.z);
+        table.scale.set(flatformscale.x, flatformscale.y, flatformscale.z);
 
         table.receiveShadow = true;
         this._scene.add(table);
