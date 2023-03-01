@@ -13,7 +13,8 @@ class App {
         divContainer.appendChild(renderer.domElement);
 
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // high quality
+        // renderer.shadowMap.numSamples = 16;
         renderer.setClearColor(0xb7ecff); // 배경색.
         this._renderer = renderer;
         const scene = new THREE.Scene();
@@ -369,13 +370,13 @@ class App {
             0.1,
             100
         );
-        camera.position.set(15, 20, 20);
+        camera.position.set(20, 20, 20);
         this._camera = camera;
     }
 
     _setupControls() {
         const orbCtrl = new OrbitControls(this._camera, this._divContainer);
-        orbCtrl.target.set(0, 8, 0); // 카메라의 lookat을 대신함.
+        orbCtrl.target.set(0, 9, 0); // 카메라의 lookat을 대신함.
         orbCtrl.update();            // 카메라 초기위치를 위 좌표로 하게 해줌.
     }
 
@@ -384,7 +385,7 @@ class App {
         // this._scene.add(lightH);
 
         const Directlight1 = new THREE.DirectionalLight(0xffffff, 0.5);
-        Directlight1.position.set(-5, 20, 5);
+        Directlight1.position.set(-5, 15, 5);
         Directlight1.lookAt(0, 15, 0);// 효과없음. 
         this._scene.add(Directlight1);
 
@@ -422,15 +423,17 @@ class App {
 
 
         Directlight1.castShadow = true;
-        // const shadow = Directlight1 .shadow; 
+        // Directlight1.shadow.bias = 0.1;
         // Directlight1.shadow.mapSize.width = 2048;
         // Directlight1.shadow.mapSize.height = 2048;
         // Directlight1.shadow.camera.near = 0.5;
         // Directlight1.shadow.camera.far = 500;
+        // Directlight1.shadow.camera.fov = 75;
         Directlight1.shadow.camera.left = -10;
         Directlight1.shadow.camera.right = 10;
         Directlight1.shadow.camera.top = 20;
         Directlight1.shadow.camera.bottom = -10
+        // Directlight1.shadow.radius = 3;
 
         // const cameraHelper = new THREE.CameraHelper(Directlight1.shadow.camera);
         // this._scene.add(cameraHelper);
