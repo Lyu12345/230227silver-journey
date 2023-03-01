@@ -2,6 +2,7 @@ import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threej
 import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/loaders/GLTFLoader.js';
 import { GUI } from 'https://threejsfundamentals.org/threejs/../3rdparty/dat.gui.module.js';
+import { RectAreaLightUniformsLib } from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/lights/RectAreaLightUniformsLib.js';
 
 class App {
     constructor() {
@@ -259,6 +260,8 @@ class App {
         const position = { x: 0, y: -flatformscale.y / 2, z: 0 };
 
         const tableGeometry = new THREE.BoxGeometry();
+        // const mesh = this._modelRepository.getObjectByName("board");
+
         // const tableGeometry = new THREE.PlaneGeometry();
         // tableGeometry.rotateX(-Math.PI / 180 * 90)
         const tableTexture = new THREE.TextureLoader().load('checkerboard.png');
@@ -309,9 +312,81 @@ class App {
     }
 
     _setupLight() {
-        const light0 = new THREE.DirectionalLight(0xffffff, 0.5);
-        light0.position.set(-1, 10, -1);
-        this._scene.add(light0);
+        RectAreaLightUniformsLib.init();
+
+        const RectLightintensity = 5;
+        const RectLightX = 16;
+        const RectLightY = 2;
+        const PosZ_1 = 10;
+        const PosZ_2 = -10;
+
+        const rectAreaLight1a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight1a.position.set(-4, 15, PosZ_1);
+        rectAreaLight1a.lookAt(0, 0, PosZ_1);
+        this._scene.add(rectAreaLight1a);
+
+        // const rectAreaLightHelper1a = new THREE.PointLightHelper(rectAreaLight1a);
+        // this._scene.add(rectAreaLightHelper1a);
+
+        const rectAreaLight2a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight2a.position.set(4, 15, PosZ_1);
+        rectAreaLight2a.lookAt(0, 0, PosZ_1);
+        this._scene.add(rectAreaLight2a);
+
+        // const rectAreaLightHelper2a = new THREE.PointLightHelper(rectAreaLight2a);
+        // this._scene.add(rectAreaLightHelper2a);
+
+        const rectAreaLight3a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight3a.position.set(-12, 15, PosZ_1);
+        rectAreaLight3a.lookAt(0, 0, PosZ_1);
+        this._scene.add(rectAreaLight3a);
+
+        // const rectAreaLightHelper3a = new THREE.PointLightHelper(rectAreaLight3a);
+        // this._scene.add(rectAreaLightHelper3a);
+
+        const rectAreaLight4a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight4a.position.set(12, 15, PosZ_1);
+        rectAreaLight4a.lookAt(0, 0, PosZ_1);
+        this._scene.add(rectAreaLight4a);
+
+        // const rectAreaLightHelper4 = new THREE.PointLightHelper(rectAreaLight4a);
+        // this._scene.add(rectAreaLightHelper4);
+
+        const rectAreaLight1b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight1b.position.set(-4, 20, PosZ_2);
+        rectAreaLight1b.lookAt(0, 0, PosZ_2);
+        this._scene.add(rectAreaLight1b);
+        
+        // const rectAreaLightHelper1b = new THREE.PointLightHelper(rectAreaLight1b);
+        // this._scene.add(rectAreaLightHelper1b);
+        
+        const rectAreaLight2b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight2b.position.set(4, 20, PosZ_2);
+        rectAreaLight2b.lookAt(0, 0, PosZ_2);
+        this._scene.add(rectAreaLight2b);
+        
+        // const rectAreaLightHelper2b = new THREE.PointLightHelper(rectAreaLight2b);
+        // this._scene.add(rectAreaLightHelper2b);
+        
+        const rectAreaLight3b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight3b.position.set(-12, 20, PosZ_2);
+        rectAreaLight3b.lookAt(0, 0, PosZ_2);
+        this._scene.add(rectAreaLight3b);
+        
+        // const rectAreaLightHelper3b = new THREE.PointLightHelper(rectAreaLight3b);
+        // this._scene.add(rectAreaLightHelper3b);
+        
+        const rectAreaLight4b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
+        rectAreaLight4b.position.set(12, 20, PosZ_2);
+        rectAreaLight4b.lookAt(0, 0, PosZ_2);
+        this._scene.add(rectAreaLight4b);
+        
+        // const rectAreaLightHelper4b = new THREE.PointLightHelper(rectAreaLight4b);
+        // this._scene.add(rectAreaLightHelper4b);
+
+        // const light0 = new THREE.DirectionalLight(0xffffff, 0.5);
+        // light0.position.set(-1, 10, -1);
+        // this._scene.add(light0);
 
         const pointLightintensity = 0.2;
 
@@ -339,7 +414,7 @@ class App {
         // const light4Helper = new THREE.PointLightHelper(light4, 1);
         // this._scene.add(light4Helper);
 
-        const lightH = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.2);
+        const lightH = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.1);
         this._scene.add(lightH);
     }
 
