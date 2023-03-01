@@ -2,7 +2,6 @@ import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threej
 import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/loaders/GLTFLoader.js';
 import { GUI } from 'https://threejsfundamentals.org/threejs/../3rdparty/dat.gui.module.js';
-import { RectAreaLightUniformsLib } from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/lights/RectAreaLightUniformsLib.js';
 
 class App {
     constructor() {
@@ -14,6 +13,7 @@ class App {
         divContainer.appendChild(renderer.domElement);
 
         renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.setClearColor(0xb7ecff); // 배경색.
         this._renderer = renderer;
         const scene = new THREE.Scene();
@@ -71,6 +71,14 @@ class App {
                 this._scene.add(arm1);
             }, 800);
             this.arm1 = arm1;
+            arm1.receiveShadow = true;
+            arm1.castShadow = true;
+            arm1.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
 
 
@@ -81,6 +89,12 @@ class App {
                 arm1.add(arm2);
             }, 800);
             this.arm2 = arm2;
+            arm2.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
 
         RobotArms.load('./assets/arm3.gltf', (gltf) => {
@@ -90,6 +104,12 @@ class App {
                 arm2.add(arm3);
             }, 200);
             this.arm3 = arm3;
+            arm3.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
 
         RobotArms.load('./assets/arm4.gltf', (gltf) => {
@@ -99,6 +119,12 @@ class App {
                 arm3.add(arm4);
             }, 200);
             this.arm4 = arm4;
+            arm4.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
 
         RobotArms.load('./assets/hand01.gltf', (gltf) => {
@@ -108,6 +134,13 @@ class App {
                 arm4.add(hand01);
             }, 800);
             this.hand01 = hand01;
+            hand01.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
+
         });
 
         RobotArms.load('./assets/hand11L.gltf', (gltf) => {
@@ -117,6 +150,12 @@ class App {
                 hand01.add(hand11L);
             }, 200);
             this.hand11L = hand11L;
+            hand11L.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
 
         RobotArms.load('./assets/hand11R.gltf', (gltf) => {
@@ -126,6 +165,12 @@ class App {
                 hand01.add(hand11R);
             }, 200);
             this.hand11R = hand11R;
+            hand11R.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
 
         RobotArms.load('./assets/hand12L.gltf', (gltf) => {
@@ -153,6 +198,13 @@ class App {
                 hand11L.add(hand21L);
             }, 200);
             this.hand21L = hand21L;
+            hand21L.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
+
         });
 
         RobotArms.load('./assets/hand21R.gltf', (gltf) => {
@@ -162,6 +214,13 @@ class App {
                 hand11R.add(hand21R);
             }, 200);
             this.hand21R = hand21R;
+            hand21R.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
+
         });
 
         ///////stand. not act.
@@ -171,7 +230,24 @@ class App {
             setTimeout(() => {
                 this._scene.add(stand);
             }, 800);
+            this.stand = stand;
+            // stand.castShadow = true;
+            stand.traverse((child) => {
+                if (child.isMesh) {
+                    child.receiveShadow = true;
+                    child.castShadow = true;
+                }
+            });
         });
+
+
+        // //test shadow
+        // const dum1Geometry = new THREE.BoxGeometry();
+        // const dum1 = new THREE.Mesh(dum1Geometry);
+        // dum1.position.set(5, 1, 0);
+        // this._scene.add(dum1);
+        // dum1.castShadow = true;
+
     }
 
     _createGuiControls() {
@@ -198,7 +274,6 @@ class App {
         }, 'refresh')
             .name('Refresh')
             .domElement.style.marginLeft = '20px';
-
 
         gui.add(this.arm1Rot, 'y', -Math.PI / 2, Math.PI / 2, 0.1).name('arm1 Y').onChange(() => {
             sound1.play();
@@ -253,19 +328,15 @@ class App {
 
     _setupModel() {
         this._createTable();
+
+
     }
 
     _createTable() {
-        const flatformscale = { x: 25, y: 1, z: 25 };
+        const flatformscale = { x: 30, y: 1, z: 30 };
         const position = { x: 0, y: -flatformscale.y / 2, z: 0 };
-
         const tableGeometry = new THREE.BoxGeometry();
-        // const mesh = this._modelRepository.getObjectByName("board");
-
-        // const tableGeometry = new THREE.PlaneGeometry();
-        // tableGeometry.rotateX(-Math.PI / 180 * 90)
         const tableTexture = new THREE.TextureLoader().load('checkerboard.png');
-        // const mapbump = new THREE.TextureLoader().load('checkerboardN.png');
         const mapbump = new THREE.TextureLoader().load('checkerboard_bump.png');
         tableTexture.wrapS = THREE.RepeatWrapping;
         tableTexture.wrapT = THREE.RepeatWrapping;
@@ -274,24 +345,21 @@ class App {
         mapbump.wrapT = THREE.RepeatWrapping;
         mapbump.repeat.set(5, 5); // change the numbers to adjust the size of the checkered pattern
         const tableMaterial = new THREE.MeshStandardMaterial({
-            // const tableMaterial = new THREE.MeshPhysicalMaterial({
             map: tableTexture,
             // normalMap: mapbump,
             bumpMap: mapbump,
             bumpScale: 0.1,
-
             roughness: 0.3,
-            // metalness: 0.2,
-            emissive: 0x202020,
-            // emissive: 0x505050,
+            // metalness: 0.3,
+            // emissive: 0x202020,
         });
         const table = new THREE.Mesh(tableGeometry, tableMaterial);
-
         table.position.set(position.x, position.y, position.z);
         table.scale.set(flatformscale.x, flatformscale.y, flatformscale.z);
 
         table.receiveShadow = true;
         this._scene.add(table);
+
     }
 
     _setupCamera() {
@@ -312,110 +380,61 @@ class App {
     }
 
     _setupLight() {
-        RectAreaLightUniformsLib.init();
+        // const lightH = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.1);
+        // this._scene.add(lightH);
 
-        const RectLightintensity = 5;
-        const RectLightX = 16;
-        const RectLightY = 2;
-        const PosZ_1 = 10;
-        const PosZ_2 = -10;
+        const Directlight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+        Directlight1.position.set(-5, 20, 5);
+        Directlight1.lookAt(0, 15, 0);// 효과없음. 
+        this._scene.add(Directlight1);
 
-        const rectAreaLight1a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight1a.position.set(-4, 15, PosZ_1);
-        rectAreaLight1a.lookAt(0, 0, PosZ_1);
-        this._scene.add(rectAreaLight1a);
-
-        // const rectAreaLightHelper1a = new THREE.PointLightHelper(rectAreaLight1a);
-        // this._scene.add(rectAreaLightHelper1a);
-
-        const rectAreaLight2a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight2a.position.set(4, 15, PosZ_1);
-        rectAreaLight2a.lookAt(0, 0, PosZ_1);
-        this._scene.add(rectAreaLight2a);
-
-        // const rectAreaLightHelper2a = new THREE.PointLightHelper(rectAreaLight2a);
-        // this._scene.add(rectAreaLightHelper2a);
-
-        const rectAreaLight3a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight3a.position.set(-12, 15, PosZ_1);
-        rectAreaLight3a.lookAt(0, 0, PosZ_1);
-        this._scene.add(rectAreaLight3a);
-
-        // const rectAreaLightHelper3a = new THREE.PointLightHelper(rectAreaLight3a);
-        // this._scene.add(rectAreaLightHelper3a);
-
-        const rectAreaLight4a = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight4a.position.set(12, 15, PosZ_1);
-        rectAreaLight4a.lookAt(0, 0, PosZ_1);
-        this._scene.add(rectAreaLight4a);
-
-        // const rectAreaLightHelper4 = new THREE.PointLightHelper(rectAreaLight4a);
-        // this._scene.add(rectAreaLightHelper4);
-
-        const rectAreaLight1b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight1b.position.set(-4, 20, PosZ_2);
-        rectAreaLight1b.lookAt(0, 0, PosZ_2);
-        this._scene.add(rectAreaLight1b);
+        const Directlight2 = new THREE.DirectionalLight(0xffffff, 0.3);
+        Directlight2.position.set(5, 1, 5);
+        Directlight2.lookAt(0, 15, 0); // 효과없음. 
+        this._scene.add(Directlight2);
         
-        // const rectAreaLightHelper1b = new THREE.PointLightHelper(rectAreaLight1b);
-        // this._scene.add(rectAreaLightHelper1b);
+        const pointLightintensity = 0.3;
         
-        const rectAreaLight2b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight2b.position.set(4, 20, PosZ_2);
-        rectAreaLight2b.lookAt(0, 0, PosZ_2);
-        this._scene.add(rectAreaLight2b);
+        const PointLight1 = new THREE.PointLight(0xffffff, pointLightintensity);
+        PointLight1.position.set(2, 13, -1);
+        this._scene.add(PointLight1);
+        const Pointlight2 = new THREE.PointLight(0xffffff, pointLightintensity);
+        Pointlight2.position.set(-5.5, 11, 5);
+        this._scene.add(Pointlight2);
+        const Pointlight3 = new THREE.PointLight(0xffffff, pointLightintensity);
+        Pointlight3.position.set(-3, 15.5, 4);
+        this._scene.add(Pointlight3);
+        const Pointlight4 = new THREE.PointLight(0xffffff, pointLightintensity);
+        Pointlight4.position.set(5, 5, -5);
+        this._scene.add(Pointlight4);
         
-        // const rectAreaLightHelper2b = new THREE.PointLightHelper(rectAreaLight2b);
-        // this._scene.add(rectAreaLightHelper2b);
-        
-        const rectAreaLight3b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight3b.position.set(-12, 20, PosZ_2);
-        rectAreaLight3b.lookAt(0, 0, PosZ_2);
-        this._scene.add(rectAreaLight3b);
-        
-        // const rectAreaLightHelper3b = new THREE.PointLightHelper(rectAreaLight3b);
-        // this._scene.add(rectAreaLightHelper3b);
-        
-        const rectAreaLight4b = new THREE.RectAreaLight(0xffffff, RectLightintensity, RectLightX, RectLightY);
-        rectAreaLight4b.position.set(12, 20, PosZ_2);
-        rectAreaLight4b.lookAt(0, 0, PosZ_2);
-        this._scene.add(rectAreaLight4b);
-        
-        // const rectAreaLightHelper4b = new THREE.PointLightHelper(rectAreaLight4b);
-        // this._scene.add(rectAreaLightHelper4b);
+        const Directlight2Helper = new THREE.DirectionalLightHelper(Directlight2, 1);
+        this._scene.add(Directlight2Helper);
+        const PointLight1Helper = new THREE.PointLightHelper(PointLight1, 1);
+        this._scene.add(PointLight1Helper);
+        const Pointlight2Helper = new THREE.PointLightHelper(Pointlight2, 1);
+        this._scene.add(Pointlight2Helper);
+        const Pointlight3Helper = new THREE.PointLightHelper(Pointlight3, 1);
+        this._scene.add(Pointlight3Helper);
+        const Pointlight4Helper = new THREE.PointLightHelper(Pointlight4, 1);
+        this._scene.add(Pointlight4Helper);
 
-        // const light0 = new THREE.DirectionalLight(0xffffff, 0.5);
-        // light0.position.set(-1, 10, -1);
-        // this._scene.add(light0);
 
-        const pointLightintensity = 0.2;
 
-        const light1 = new THREE.PointLight(0xffffff, pointLightintensity);
-        light1.position.set(-10, 5, -10);
-        this._scene.add(light1);
-        // const light1Helper = new THREE.PointLightHelper(light1, 1);
-        // this._scene.add(light1Helper);
+        Directlight1.castShadow = true;
+        // const shadow = Directlight1 .shadow; 
+        // Directlight1.shadow.mapSize.width = 2048;
+        // Directlight1.shadow.mapSize.height = 2048;
+        // Directlight1.shadow.camera.near = 0.5;
+        // Directlight1.shadow.camera.far = 500;
+        Directlight1.shadow.camera.left = -10;
+        Directlight1.shadow.camera.right = 10;
+        Directlight1.shadow.camera.top = 20;
+        Directlight1.shadow.camera.bottom = -10
 
-        const light2 = new THREE.PointLight(0xffffff, pointLightintensity);
-        light2.position.set(5, 10, 5);
-        this._scene.add(light2);
-        // const light2Helper = new THREE.PointLightHelper(light2, 1);
-        // this._scene.add(light2Helper);
+        // const cameraHelper = new THREE.CameraHelper(Directlight1.shadow.camera);
+        // this._scene.add(cameraHelper);
 
-        const light3 = new THREE.PointLight(0xffffff, 2 * pointLightintensity);
-        light3.position.set(-5, 13, 5);
-        this._scene.add(light3);
-        // const light3Helper = new THREE.PointLightHelper(light3, 1);
-        // this._scene.add(light3Helper);
-
-        const light4 = new THREE.PointLight(0xffffff, pointLightintensity);
-        light4.position.set(5, 5, -5);
-        this._scene.add(light4);
-        // const light4Helper = new THREE.PointLightHelper(light4, 1);
-        // this._scene.add(light4Helper);
-
-        const lightH = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.1);
-        this._scene.add(lightH);
     }
 
     update(time) {
