@@ -271,11 +271,11 @@ class App {
         mapbump.wrapT = THREE.RepeatWrapping;
         mapbump.repeat.set(5, 5); // change the numbers to adjust the size of the checkered pattern
         const tableMaterial = new THREE.MeshStandardMaterial({
-        // const tableMaterial = new THREE.MeshPhysicalMaterial({
+            // const tableMaterial = new THREE.MeshPhysicalMaterial({
             map: tableTexture,
             // normalMap: mapbump,
-            bumpMap : mapbump,
-            bumpScale : 0.1,
+            bumpMap: mapbump,
+            bumpScale: 0.1,
 
             roughness: 0.3,
             // metalness: 0.2,
@@ -309,11 +309,17 @@ class App {
     }
 
     _setupLight() {
-        const light1 = new THREE.DirectionalLight(0xffffff, 0.5);
-        light1.position.set(-1, 10, -1);
-        this._scene.add(light1);
+        const light0 = new THREE.DirectionalLight(0xffffff, 0.5);
+        light0.position.set(-1, 10, -1);
+        this._scene.add(light0);
 
         const pointLightintensity = 0.2;
+
+        const light1 = new THREE.PointLight(0xffffff, pointLightintensity);
+        light1.position.set(-10, 5, -10);
+        this._scene.add(light1);
+        // const light1Helper = new THREE.PointLightHelper(light1, 1);
+        // this._scene.add(light1Helper);
 
         const light2 = new THREE.PointLight(0xffffff, pointLightintensity);
         light2.position.set(5, 10, 5);
@@ -333,7 +339,7 @@ class App {
         // const light4Helper = new THREE.PointLightHelper(light4, 1);
         // this._scene.add(light4Helper);
 
-        const lightH = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.5);
+        const lightH = new THREE.HemisphereLight(0xB1E1FF, 0xB97A20, 0.2);
         this._scene.add(lightH);
     }
 
